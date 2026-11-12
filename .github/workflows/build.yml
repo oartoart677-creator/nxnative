@@ -5,25 +5,23 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: macos-14
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Environment & Download Assets
+      - name: Set up Environment & Download Tools
         run: |
-          sudo apt-get update && sudo apt-get install -y p7zip-full wget
-          wget -O hactool.zip https://github.com/SciresM/hactool/releases/download/1.4.0/hactool-1.4.0-linux.zip
-          7z x hactool.zip -ohactool_bin && chmod +x hactool_bin/hactool
-          wget -O prod.keys "https://buzzheavier.com/vxf5ige330cv"
-          wget -O game.nsp "https://buzzheavier.com/k2cupnstnsgl"
-          mkdir -p game_extracted/exefs game_extracted/romfs
-          ./hactool_bin/hactool -k prod.keys -t nsp game.nsp --exefsdir=game_extracted/exefs --romfsdir=game_extracted/romfs
+          brew install p7zip wget
           
-      - name: Archive Extracted Files
-        run: tar -cvf game_files.tar game_extracted
-
-      - name: Upload Artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: Godzilla-Game-Files
-          path: game_files.tar
+      - name: Download Game and Keys
+        run: |
+          echo "Downloading game NSP..."
+          wget -O game.nsp "https://buzzheavier.com/k2cupnstnsgl"
+          
+          echo "Downloading prod.keys..."
+          wget -O prod.keys "https://buzzheavier.com/vxf5ige330cv"
+          
+      - name: Verify Downloaded Files
+        run: |
+          ls -la
+          echo "Files downloaded successfully!"
