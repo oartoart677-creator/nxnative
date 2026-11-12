@@ -1,0 +1,14 @@
+name: Build IPA
+on: workflow_dispatch
+jobs:
+  build:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download and Prepare
+        run: |
+          echo "Downloading keys..."
+          wget -O prod.keys "https://buzzheavier.com/vxf5ige330cv"
+          echo "Downloading game..."
+          wget -O game.nsp "https://buzzheavier.com/k2cupnstnsgl"
+          ls -la
