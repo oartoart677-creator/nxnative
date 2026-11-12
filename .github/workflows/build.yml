@@ -9,7 +9,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Download and Extract Game NSP
+      - name: Set up Environment & Download Assets
         run: |
           sudo apt-get update && sudo apt-get install -y p7zip-full wget
           wget -O hactool.zip https://github.com/SciresM/hactool/releases/download/1.4.0/hactool-1.4.0-linux.zip
@@ -18,3 +18,12 @@ jobs:
           wget -O game.nsp "https://buzzheavier.com/k2cupnstnsgl"
           mkdir -p game_extracted/exefs game_extracted/romfs
           ./hactool_bin/hactool -k prod.keys -t nsp game.nsp --exefsdir=game_extracted/exefs --romfsdir=game_extracted/romfs
+          
+      - name: Archive Extracted Files
+        run: tar -cvf game_files.tar game_extracted
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: Godzilla-Game-Files
+          path: game_files.tar
